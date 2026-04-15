@@ -120,6 +120,6 @@ except Exception as e:
 
 app.include_router(person_router)
 app.include_router(cctv_router)
-app.include_router(face_recognition_app.router)
+app.mount("/face", face_recognition_app)
 
 logger.info("FastAPI app initialized successfully")
