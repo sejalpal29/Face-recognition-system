@@ -108,19 +108,15 @@ async def root():
 
 from routes import router as person_router
 from cctv_routes import router as cctv_router
-from face_recognition_system.api_server import app as face_recognition_app
-app.include_router(face_recognition_app.router)
 
-# Initialize face recognition components
+# Correct way to mount full FastAPI app
 try:
-    from face_recognition_system.api_server import initialize_components
-    initialize_components()
-    logger.info("Face recognition components initialized successfully")
+    from face_recognition_system import api_server
+    app.mount("/face", api_server.app)
+    logger.info("Face recognition API mounted at /face")
 except Exception as e:
-    logger.error(f"Failed to initialize face recognition components: {e}")
+    logger.error(f"Failed to load face recognition API: {e}")
 
+# Include your normal routers
 app.include_router(person_router)
 app.include_router(cctv_router)
-app.include_router(face_recognition_app.router)
-
-logger.info("FastAPI app initialized successfully")
